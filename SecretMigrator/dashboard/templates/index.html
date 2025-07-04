@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Trading Bot Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/feather-icons@4.24.1/dist/feather.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i data-feather="trending-up"></i>
+                Crypto Trading Bot
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    Status: <span id="bot-status" class="badge bg-success">Running</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2">
+                <div class="sidebar">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-tab="overview" href="#overview">
+                                <i data-feather="home"></i> Overview
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="positions" href="#positions">
+                                <i data-feather="briefcase"></i> Positions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="trades" href="#trades">
+                                <i data-feather="activity"></i> Trades
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="performance" href="#performance">
+                                <i data-feather="bar-chart-2"></i> Performance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="signals" href="#signals">
+                                <i data-feather="trending-up"></i> Market Signals
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="settings" href="#settings">
+                                <i data-feather="settings"></i> Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9 col-lg-10">
+                <!-- Overview Tab -->
+                <div id="overview" class="tab-content active">
+                    <!-- Status Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card status-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-muted">Account Balance</h6>
+                                            <h4 id="account-balance">$0.00</h4>
+                                        </div>
+                                        <div class="status-icon bg-primary">
+                                            <i data-feather="dollar-sign"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card status-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-muted">Daily P&L</h6>
+                                            <h4 id="daily-pnl">$0.00</h4>
+                                        </div>
+                                        <div class="status-icon bg-success">
+                                            <i data-feather="trending-up"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card status-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-muted">Active Positions</h6>
+                                            <h4 id="active-positions">0</h4>
+                                        </div>
+                                        <div class="status-icon bg-warning">
+                                            <i data-feather="briefcase"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card status-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-muted">Total Trades</h6>
+                                            <h4 id="total-trades">0</h4>
+                                        </div>
+                                        <div class="status-icon bg-info">
+                                            <i data-feather="activity"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Portfolio Performance</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="performanceChart" height="100"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Asset Allocation</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="allocationChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Data -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Market Overview</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="market-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Symbol</th>
+                                                    <th>Price</th>
+                                                    <th>24h Change</th>
+                                                    <th>Volume</th>
+                                                    <th>High</th>
+                                                    <th>Low</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="market-data">
+                                                <!-- Market data will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Positions Tab -->
+                <div id="positions" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Active Positions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="positions-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Symbol</th>
+                                            <th>Side</th>
+                                            <th>Size</th>
+                                            <th>Entry Price</th>
+                                            <th>Current Price</th>
+                                            <th>P&L</th>
+                                            <th>Stop Loss</th>
+                                            <th>Take Profit</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="positions-data">
+                                        <!-- Positions data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trades Tab -->
+                <div id="trades" class="tab-content">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title">Trade History</h5>
+                            <div>
+                                <select class="form-select form-select-sm" id="trade-filter">
+                                    <option value="all">All Trades</option>
+                                    <option value="open">Open Trades</option>
+                                    <option value="closed">Closed Trades</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="trades-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Symbol</th>
+                                            <th>Side</th>
+                                            <th>Size</th>
+                                            <th>Price</th>
+                                            <th>P&L</th>
+                                            <th>Status</th>
+                                            <th>AI Signal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="trades-data">
+                                        <!-- Trades data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Tab -->
+                <div id="performance" class="tab-content">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Performance Metrics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="metric">
+                                                <span class="metric-label">Total Return</span>
+                                                <span class="metric-value" id="total-return">0%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="metric">
+                                                <span class="metric-label">Win Rate</span>
+                                                <span class="metric-value" id="win-rate">0%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="metric">
+                                                <span class="metric-label">Max Drawdown</span>
+                                                <span class="metric-value" id="max-drawdown">0%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="metric">
+                                                <span class="metric-label">Sharpe Ratio</span>
+                                                <span class="metric-value" id="sharpe-ratio">0.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Risk Metrics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar" id="risk-progress" role="progressbar" style="width: 0%">
+                                            Risk Level: <span id="risk-level">LOW</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <small class="text-muted">Daily Loss Limit: <span id="daily-loss-limit">$0</span></small>
+                                        </div>
+                                        <div class="col-12">
+                                            <small class="text-muted">Max Positions: <span id="max-positions">0</span></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Daily Performance Chart</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="dailyPerformanceChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Signals Tab -->
+                <div id="signals" class="tab-content">
+                    <div class="row mb-4">
+                        <!-- Market Sentiment Overview -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Overall Market Sentiment</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <h2 id="overall-sentiment" class="text-success">BULLISH</h2>
+                                        <div class="progress mb-2">
+                                            <div id="sentiment-strength" class="progress-bar bg-success" style="width: 72%"></div>
+                                        </div>
+                                        <small class="text-muted">Confidence: <span id="sentiment-confidence">85%</span></small>
+                                    </div>
+                                    <p class="text-muted">Based on external signals aggregation</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Signal Sources -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Signal Sources</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row" id="signal-sources">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Trending Signals -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Trending Signals</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="trending-signals" class="list-group list-group-flush">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Fear & Greed Index -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Fear & Greed Index</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <div class="position-relative mb-3" style="height: 200px;">
+                                        <canvas id="fearGreedGauge" width="200" height="200"></canvas>
+                                    </div>
+                                    <div id="fear-greed-details">
+                                        <h4 id="fear-greed-value">75</h4>
+                                        <p id="fear-greed-sentiment" class="text-warning">Greed</p>
+                                        <small class="text-muted">Suggests potential market correction</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <!-- Social Sentiment -->
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Social Media Sentiment by Asset</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="socialSentimentChart" height="100"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings" class="tab-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Trading Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Trading Pairs</label>
+                                        <input type="text" class="form-control" id="trading-pairs" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Max Position Size</label>
+                                        <input type="number" class="form-control" id="max-position-size" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Stop Loss %</label>
+                                        <input type="number" class="form-control" id="stop-loss-pct" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Take Profit %</label>
+                                        <input type="number" class="form-control" id="take-profit-pct" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Bot Controls</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success" id="start-bot" disabled>
+                                            <i data-feather="play"></i> Start Bot
+                                        </button>
+                                        <button class="btn btn-warning" id="pause-bot" disabled>
+                                            <i data-feather="pause"></i> Pause Bot
+                                        </button>
+                                        <button class="btn btn-danger" id="stop-bot" disabled>
+                                            <i data-feather="stop-circle"></i> Stop Bot
+                                        </button>
+                                        <button class="btn btn-secondary" id="refresh-data">
+                                            <i data-feather="refresh-cw"></i> Refresh Data
+                                        </button>
+                                    </div>
+                                    <hr>
+                                    <div class="alert alert-info">
+                                        <small>
+                                            <i data-feather="info"></i>
+                                            Bot controls are read-only in this dashboard. 
+                                            Use Telegram commands or restart the application to control the bot.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Initialize feather icons
+        feather.replace();
+    </script>
+</body>
+</html>

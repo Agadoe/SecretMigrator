@@ -1,0 +1,30 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["glibcLocales"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Trading Bot Server"
+
+[[workflows.workflow]]
+name = "Trading Bot Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "export TELEGRAM_BOT_TOKEN=\"7758454456:AAHSgDaIQUW_zzlT9v48VKUqGrtETjby-e4\" && export EXCHANGE_API_KEY=\"lpBeH9EJucZvpfL1FLvGrz4Rc5vlfCrXXCw9wFkeCSdjopyx4pHTapQYkW7Wq6il\" && export EXCHANGE_SECRET_KEY=\"Hsp97jn7p5nQZfJaVQJJJeG3paUxEljITh82VorVGycqzeNz3oZoRY3lA0N6wkmE\" && export TRADING_MODE=\"demo\" && pip install -r requirements.txt 2>/dev/null || pip install flask pandas numpy scikit-learn ccxt python-telegram-bot aiosqlite joblib && python main.py"
+waitForPort = 5000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
