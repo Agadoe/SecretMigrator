@@ -10,6 +10,11 @@ aiohttp==3.8.1
 numpy==1.21.2
 ta==0.7.0
 SQLAlchemy==1.4.23
-psycopg2-binary==2.9.1  # for PostgreSQL support
-redis==3.5.3  # for caching
-requests==2.26.0 
+psycopg2-binary==2.9.1
+redis==3.5.3
+requests==2.26.0
+wheel==0.37.1
+setuptools==57.4.0
+notion-client==2.0.0  # for Notion integration
+python-dateutil==2.8.2
+pytz==2021.3 
