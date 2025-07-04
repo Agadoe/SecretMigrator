@@ -10,13 +10,16 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+# Create and activate virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Python dependencies
-RUN python -m pip install --upgrade pip && \
-    pip install wheel setuptools && \
-    pip install --no-cache-dir -r requirements.txt
+# Install base packages first
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Copy and install requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
