@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt"
+buildCommand = "pip install --upgrade pip && pip install Cython wheel setuptools && pip install --no-cache-dir -r requirements.txt"
 
 [deploy]
 startCommand = "python main.py"
@@ -9,17 +9,29 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
 [env]
-PYTHON_VERSION = "3.11"
+PYTHON_VERSION = "3.12"
 PIP_VERSION = "23.3.1"
 PORT = "8000"
 
 [phases.setup]
-nixPkgs = ["gcc", "python311", "python311Packages.pip", "python311Packages.virtualenv", "make", "libffi", "openssl"]
+nixPkgs = [
+    "gcc",
+    "python312",
+    "python312Packages.pip",
+    "python312Packages.virtualenv",
+    "python312Packages.wheel",
+    "python312Packages.setuptools",
+    "python312Packages.cython",
+    "make",
+    "libffi",
+    "openssl",
+    "python312.dev"
+]
 
 [phases.install]
 cmds = [
     "python -m venv /opt/venv",
     ". /opt/venv/bin/activate",
-    "pip install --upgrade pip setuptools wheel",
+    "pip install --upgrade pip setuptools wheel Cython",
     "pip install --no-cache-dir -r requirements.txt"
 ] 
