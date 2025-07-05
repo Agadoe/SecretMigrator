@@ -27,12 +27,15 @@ RUN pip install --no-cache-dir \
     cython \
     numpy
 
-# Copy and install requirements
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy requirements first
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application code
 COPY . .
+
+# Verify ccxt version
+RUN pip freeze | grep ccxt
 
 # Create volume for persistent data
 VOLUME ["/app/data"]
