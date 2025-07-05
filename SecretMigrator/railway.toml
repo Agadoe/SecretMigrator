@@ -17,6 +17,7 @@ PORT = "8000"
 nixPkgs = [
     "gcc",
     "python39",
+    "python39-distutils",
     "python39Packages.pip",
     "python39Packages.virtualenv",
     "python39Packages.wheel",
@@ -25,13 +26,14 @@ nixPkgs = [
     "python39Packages.pandas",
     "make",
     "libffi",
-    "openssl"
+    "openssl",
+    "pkg-config"
 ]
 
 [phases.install]
 cmds = [
     "python -m venv /opt/venv",
     ". /opt/venv/bin/activate",
-    "pip install --upgrade pip",
+    "pip install --upgrade pip setuptools wheel",
     "pip install -r requirements.txt"
 ] 
