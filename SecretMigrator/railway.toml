@@ -1,5 +1,10 @@
 [build]
 builder = "NIXPACKS"
+buildCommand = """
+export PYTHONPATH=/nix/store/python39/lib/python3.9/site-packages:$PYTHONPATH && \
+python3.9 -m pip install --upgrade pip setuptools wheel && \
+python3.9 -m pip install -r requirements.txt
+"""
 
 [deploy]
 startCommand = "python main.py"
@@ -8,7 +13,8 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
 [env]
-PYTHON_VERSION = "3.9.18"
+PYTHON_VERSION = "3.9"
+NIXPACKS_PYTHON_VERSION = "3.9"
 PIP_VERSION = "23.3.1"
 PORT = "8000"
 
@@ -16,10 +22,11 @@ PORT = "8000"
 nixPkgs = [
     "gcc",
     "python39",
-    "python39-distutils",
-    "python39Packages.pip",
-    "python39Packages.setuptools",
-    "python39Packages.wheel",
+    "python39.pkgs.pip",
+    "python39.pkgs.setuptools",
+    "python39.pkgs.wheel",
+    "python39.pkgs.distutils-extra",
+    "python39.pkgs.venv",
     "make",
     "libffi",
     "openssl",
@@ -28,8 +35,11 @@ nixPkgs = [
 
 [phases.build]
 cmds = [
-    "python -m venv /opt/venv",
-    ". /opt/venv/bin/activate",
-    "pip install --upgrade pip setuptools wheel",
-    "pip install -r requirements.txt"
+    "python3.9 -m venv /opt/venv",
+    "export PYTHONPATH=/opt/venv/lib/python3.9/site-packages:$PYTHONPATH",
+    "source /opt/venv/bin/activate",
+    "which python",
+    "python --version",
+    "python -m pip install --upgrade pip setuptools wheel",
+    "python -m pip install -r requirements.txt --no-cache-dir"
 ] 
