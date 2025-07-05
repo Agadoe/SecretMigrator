@@ -63,12 +63,12 @@ if __name__ == '__main__':
     # Create requirements.txt if it doesn't exist
     if not os.path.exists('requirements.txt'):
         requirements = """
-flask==2.0.1
-ccxt==3.0.0
-pandas==1.3.3
-aiosqlite==0.17.0
-python-telegram-bot==13.7
-flup6==1.1.1
+flask>=2.0.1
+ccxt>=4.4.92,<5.0.0
+pandas>=1.3.3,<2.0.0
+aiosqlite>=0.17.0
+python-telegram-bot>=13.7,<14.0
+flup6>=1.1.1
 """
         with open('requirements.txt', 'w') as f:
             f.write(requirements)

@@ -1,14 +1,9 @@
-# Git
-.git
-.gitignore
-
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -20,6 +15,7 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -27,8 +23,8 @@ var/
 # Virtual Environment
 venv/
 ENV/
-.env/
-.venv/
+env/
+.env
 
 # IDE
 .idea/
@@ -36,16 +32,22 @@ ENV/
 *.swp
 *.swo
 
-# Logs
+# Logs and databases
 *.log
-logs/
-
-# Database
-*.db
-*.sqlite
 *.sqlite3
+*.db
 
-# Other
-.DS_Store
-node_modules/
-*.bak 
+# Local development
+.git
+.gitignore
+README.md
+*.md
+deploy_cpanel.py
+tests/
+docs/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml 
