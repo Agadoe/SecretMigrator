@@ -1,11 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = """
-pip install --upgrade pip && \
-pip install --no-cache-dir --only-binary=:all: wheel setuptools Cython && \
-pip install --no-cache-dir --only-binary=:all: numpy pandas && \
-pip install --no-cache-dir -r requirements.txt
-"""
+buildCommand = "pip install --upgrade pip && pip install -r requirements.txt"
 
 [deploy]
 startCommand = "python main.py"
@@ -14,28 +9,23 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
 [env]
-PYTHON_VERSION = "3.12"
+PYTHON_VERSION = "3.9.18"
 PIP_VERSION = "23.3.1"
 PORT = "8000"
-PIP_EXTRA_INDEX_URL = "https://pypi.org/simple"
-PIP_FIND_LINKS = "https://pypi.org/simple"
-PIP_PREFER_BINARY = "1"
 
 [phases.setup]
 nixPkgs = [
     "gcc",
-    "python312",
-    "python312Packages.pip",
-    "python312Packages.virtualenv",
-    "python312Packages.wheel",
-    "python312Packages.setuptools",
-    "python312Packages.cython",
-    "python312Packages.numpy",
-    "python312Packages.pandas",
+    "python39",
+    "python39Packages.pip",
+    "python39Packages.virtualenv",
+    "python39Packages.wheel",
+    "python39Packages.setuptools",
+    "python39Packages.numpy",
+    "python39Packages.pandas",
     "make",
     "libffi",
-    "openssl",
-    "python312.dev"
+    "openssl"
 ]
 
 [phases.install]
@@ -43,6 +33,5 @@ cmds = [
     "python -m venv /opt/venv",
     ". /opt/venv/bin/activate",
     "pip install --upgrade pip",
-    "pip install --no-cache-dir --only-binary=:all: wheel setuptools Cython numpy pandas",
-    "pip install --no-cache-dir -r requirements.txt"
+    "pip install -r requirements.txt"
 ] 
