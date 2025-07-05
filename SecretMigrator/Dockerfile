@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y \
     gcc \
     python3-dev \
     curl \
+    make \
+    g++ \
+    libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Create and activate virtual environment
@@ -16,6 +19,13 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Install base packages first
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Install build dependencies first
+RUN pip install --no-cache-dir \
+    wheel \
+    setuptools \
+    cython \
+    numpy
 
 # Copy and install requirements
 COPY requirements.txt .
