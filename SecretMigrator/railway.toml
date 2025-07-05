@@ -1,6 +1,11 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pip install --upgrade pip && pip install Cython wheel setuptools && pip install --no-cache-dir -r requirements.txt"
+buildCommand = """
+pip install --upgrade pip && \
+pip install --no-cache-dir --only-binary=:all: wheel setuptools Cython && \
+pip install --no-cache-dir --only-binary=:all: numpy pandas && \
+pip install --no-cache-dir -r requirements.txt
+"""
 
 [deploy]
 startCommand = "python main.py"
@@ -12,6 +17,9 @@ restartPolicyMaxRetries = 10
 PYTHON_VERSION = "3.12"
 PIP_VERSION = "23.3.1"
 PORT = "8000"
+PIP_EXTRA_INDEX_URL = "https://pypi.org/simple"
+PIP_FIND_LINKS = "https://pypi.org/simple"
+PIP_PREFER_BINARY = "1"
 
 [phases.setup]
 nixPkgs = [
@@ -22,6 +30,8 @@ nixPkgs = [
     "python312Packages.wheel",
     "python312Packages.setuptools",
     "python312Packages.cython",
+    "python312Packages.numpy",
+    "python312Packages.pandas",
     "make",
     "libffi",
     "openssl",
@@ -32,6 +42,7 @@ nixPkgs = [
 cmds = [
     "python -m venv /opt/venv",
     ". /opt/venv/bin/activate",
-    "pip install --upgrade pip setuptools wheel Cython",
+    "pip install --upgrade pip",
+    "pip install --no-cache-dir --only-binary=:all: wheel setuptools Cython numpy pandas",
     "pip install --no-cache-dir -r requirements.txt"
 ] 
