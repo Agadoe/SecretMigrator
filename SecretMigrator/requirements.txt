@@ -2,7 +2,7 @@
 flask==2.0.1
 fastapi==0.68.0
 gunicorn==20.1.0
-uvicorn[standard]==0.15.0
+uvicorn==0.15.0
 
 # Trading Dependencies
 ccxt==4.4.92
@@ -17,19 +17,19 @@ psycopg2-binary==2.9.1
 redis==3.5.3
 
 # Async Dependencies
-aiohttp==3.10.11
+aiohttp==3.7.4
 aiofiles==0.8.0
-yarl==1.9.4
-frozenlist==1.4.1
-multidict==6.0.5
-attrs==23.2.0
-async-timeout==4.0.3
+yarl==1.7.2
+frozenlist==1.2.0
+multidict==5.2.0
+attrs==21.4.0
+async-timeout==3.0.1
 
 # API and Communication
 python-telegram-bot==13.7
 python-dotenv==0.19.0
 requests==2.26.0
-notion-client==2.0.0
+notion-client==1.0.0
 
 # Date and Time
 python-dateutil==2.8.2
@@ -40,8 +40,8 @@ wheel==0.37.1
 setuptools==57.4.0
 
 # Server Dependencies
-httptools==0.5.0
-uvloop==0.17.0
+httptools==0.3.0
+uvloop==0.16.0
 websockets==10.0
 watchfiles==0.18.0
 python-multipart==0.0.5 

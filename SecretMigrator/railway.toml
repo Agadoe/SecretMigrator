@@ -1,6 +1,5 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pip install --upgrade pip && pip install -r requirements.txt"
 
 [deploy]
 startCommand = "python main.py"
@@ -19,18 +18,15 @@ nixPkgs = [
     "python39",
     "python39-distutils",
     "python39Packages.pip",
-    "python39Packages.virtualenv",
-    "python39Packages.wheel",
     "python39Packages.setuptools",
-    "python39Packages.numpy",
-    "python39Packages.pandas",
+    "python39Packages.wheel",
     "make",
     "libffi",
     "openssl",
     "pkg-config"
 ]
 
-[phases.install]
+[phases.build]
 cmds = [
     "python -m venv /opt/venv",
     ". /opt/venv/bin/activate",
